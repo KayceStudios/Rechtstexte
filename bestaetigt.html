@@ -4,44 +4,94 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>E-Mail bestätigt — Party!</title>
-<link rel="stylesheet" href="stil.css">
 <style>
-  .hero { text-align: center; padding: 8px 0 4px; }
-  .tick {
-    width: 74px; height: 74px; margin: 0 auto 18px;
-    border-radius: 50%;
-    background: linear-gradient(140deg, #ff6b00, #ff2d78);
-    color: #fff; font-size: 38px; line-height: 74px; font-weight: 800;
-    box-shadow: 0 8px 26px rgba(255, 45, 120, 0.32);
+  /* Derselbe Verlauf wie der Login-Bildschirm der App (AUTH_GRADIENT). */
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: linear-gradient(180deg,#6E2CA8,#9B1E8C,#C51A6B,#DE2F45,#EC5A1C,#F98D08);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 28px 20px;
+    overflow: hidden;
   }
-  .steps { text-align: left; max-width: 380px; margin: 24px auto 0; }
-  .steps li { margin-bottom: 12px; }
+
+  /* Sternenhimmel — dieselben Positionen wie in der App. */
+  .sky { position: fixed; inset: 0; pointer-events: none; }
+  .sky i, .sky b {
+    position: absolute; display: block;
+    opacity: var(--o);
+    animation: blink 3s ease-in-out infinite alternate;
+  }
+  .sky i { background: #fff; border-radius: 50%; box-shadow: 0 0 6px rgba(255,255,255,0.8); }
+  .sky b {
+    background: #fff;
+    clip-path: polygon(50% 0%, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0% 50%, 44% 44%);
+  }
+  @keyframes blink { from { opacity: calc(var(--o) * 0.2); } to { opacity: var(--o); } }
+
+  .box { position: relative; text-align: center; max-width: 420px; width: 100%; }
+
+  .logo { width: 224px; max-width: 62%; height: auto; margin: 0 auto 30px; display: block; }
+
+  .tick {
+    width: 82px; height: 82px; margin: 0 auto 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+    border: 2px solid rgba(255,255,255,0.55);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; line-height: 1;
+    animation: pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  }
+  @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  h1 { font-size: 27px; font-weight: 800; margin: 0 0 10px; letter-spacing: -0.4px;
+       text-shadow: 0 2px 14px rgba(0,0,0,0.25); }
+  p  { margin: 0; font-size: 16px; color: rgba(255,255,255,0.92); text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
+
+  .card {
+    margin-top: 26px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.24);
+    border-radius: 18px;
+    padding: 18px 20px;
+    text-align: left;
+    backdrop-filter: blur(8px);
+  }
+  .card ol { margin: 0; padding-left: 20px; }
+  .card li { margin-bottom: 7px; font-size: 15px; }
+  .card li:last-child { margin-bottom: 0; }
+
+  footer { position: fixed; left: 0; right: 0; bottom: 16px; text-align: center;
+           font-size: 12.5px; color: rgba(255,255,255,0.7); }
+  footer a { color: rgba(255,255,255,0.9); }
+
+  @media (max-width: 380px) { h1 { font-size: 23px; } .logo { margin-bottom: 22px; } }
 </style>
 </head>
 <body>
 
-<header>
-  <p class="logo">Party!</p>
-  <p>Gemeinsam feiern war noch nie so einfach</p>
-</header>
+<div class="sky"><i style="top:6.38%;left:23%;width:4px;height:4px;--o:0.289;animation-duration:2s;animation-delay:0.00s"></i><i style="top:27.84%;left:76%;width:1.5px;height:1.5px;--o:0.260;animation-duration:3s;animation-delay:0.12s"></i><i style="top:49.30%;left:32%;width:1.5px;height:1.5px;--o:0.146;animation-duration:4s;animation-delay:0.24s"></i><i style="top:12.76%;left:85%;width:2.5px;height:2.5px;--o:0.573;animation-duration:5s;animation-delay:0.36s"></i><i style="top:34.22%;left:41%;width:1.5px;height:1.5px;--o:0.404;animation-duration:2s;animation-delay:0.48s"></i><i style="top:55.68%;left:94%;width:1.5px;height:1.5px;--o:0.050;animation-duration:3s;animation-delay:0.60s"></i><i style="top:19.14%;left:50%;width:2.5px;height:2.5px;--o:0.319;animation-duration:4s;animation-delay:0.72s"></i><i style="top:40.60%;left:6%;width:1.5px;height:1.5px;--o:0.223;animation-duration:5s;animation-delay:0.84s"></i><i style="top:4.06%;left:59%;width:4px;height:4px;--o:0.666;animation-duration:2s;animation-delay:0.96s"></i><i style="top:25.52%;left:15%;width:2.5px;height:2.5px;--o:0.515;animation-duration:3s;animation-delay:1.08s"></i><i style="top:46.98%;left:68%;width:1.5px;height:1.5px;--o:0.092;animation-duration:4s;animation-delay:1.20s"></i><i style="top:10.44%;left:24%;width:1.5px;height:1.5px;--o:0.379;animation-duration:5s;animation-delay:1.32s"></i><i style="top:31.90%;left:77%;width:2.5px;height:2.5px;--o:0.299;animation-duration:2s;animation-delay:1.44s"></i><i style="top:53.36%;left:33%;width:1.5px;height:1.5px;--o:0.135;animation-duration:3s;animation-delay:1.56s"></i><i style="top:16.82%;left:86%;width:1.5px;height:1.5px;--o:0.626;animation-duration:4s;animation-delay:1.68s"></i><i style="top:38.28%;left:42%;width:2.5px;height:2.5px;--o:0.134;animation-duration:5s;animation-delay:1.80s"></i><i style="top:1.74%;left:95%;width:4px;height:4px;--o:0.438;animation-duration:2s;animation-delay:1.92s"></i><i style="top:23.20%;left:51%;width:1.5px;height:1.5px;--o:0.376;animation-duration:3s;animation-delay:2.04s"></i><i style="top:44.66%;left:7%;width:2.5px;height:2.5px;--o:0.229;animation-duration:4s;animation-delay:2.16s"></i><i style="top:8.12%;left:60%;width:1.5px;height:1.5px;--o:0.737;animation-duration:5s;animation-delay:2.28s"></i><i style="top:29.58%;left:16%;width:1.5px;height:1.5px;--o:0.176;animation-duration:2s;animation-delay:2.40s"></i><i style="top:51.04%;left:69%;width:2.5px;height:2.5px;--o:0.102;animation-duration:3s;animation-delay:2.52s"></i><i style="top:14.50%;left:25%;width:1.5px;height:1.5px;--o:0.452;animation-duration:4s;animation-delay:2.64s"></i><i style="top:35.96%;left:78%;width:1.5px;height:1.5px;--o:0.323;animation-duration:5s;animation-delay:2.76s"></i><i style="top:57.42%;left:34%;width:4px;height:4px;--o:0.108;animation-duration:2s;animation-delay:2.88s"></i><i style="top:20.88%;left:87%;width:1.5px;height:1.5px;--o:0.219;animation-duration:3s;animation-delay:3.00s"></i><i style="top:42.34%;left:43%;width:1.5px;height:1.5px;--o:0.161;animation-duration:4s;animation-delay:3.12s"></i><i style="top:5.80%;left:96%;width:2.5px;height:2.5px;--o:0.529;animation-duration:5s;animation-delay:3.24s"></i><i style="top:27.26%;left:52%;width:1.5px;height:1.5px;--o:0.416;animation-duration:2s;animation-delay:3.36s"></i><i style="top:48.72%;left:8%;width:1.5px;height:1.5px;--o:0.219;animation-duration:3s;animation-delay:3.48s"></i><i style="top:12.18%;left:61%;width:2.5px;height:2.5px;--o:0.261;animation-duration:4s;animation-delay:3.60s"></i><i style="top:33.64%;left:17%;width:1.5px;height:1.5px;--o:0.220;animation-duration:5s;animation-delay:3.72s"></i><i style="top:55.10%;left:70%;width:4px;height:4px;--o:0.095;animation-duration:2s;animation-delay:3.84s"></i><i style="top:18.56%;left:26%;width:2.5px;height:2.5px;--o:0.510;animation-duration:3s;animation-delay:3.96s"></i><i style="top:40.02%;left:79%;width:1.5px;height:1.5px;--o:0.330;animation-duration:4s;animation-delay:4.08s"></i><i style="top:3.48%;left:35%;width:1.5px;height:1.5px;--o:0.303;animation-duration:5s;animation-delay:4.20s"></i><i style="top:24.94%;left:88%;width:2.5px;height:2.5px;--o:0.280;animation-duration:2s;animation-delay:4.32s"></i><i style="top:46.40%;left:44%;width:1.5px;height:1.5px;--o:0.172;animation-duration:3s;animation-delay:4.44s"></i><i style="top:9.86%;left:0%;width:1.5px;height:1.5px;--o:0.604;animation-duration:4s;animation-delay:4.56s"></i><i style="top:31.32%;left:53%;width:2.5px;height:2.5px;--o:0.441;animation-duration:5s;animation-delay:4.68s"></i><b style="top:9%;left:70%;width:12px;height:12px;--o:0.663;animation-delay:1.40s"></b><b style="top:15%;left:7%;width:22px;height:22px;--o:0.605;animation-delay:0.14s"></b><b style="top:21%;left:84%;width:16px;height:16px;--o:0.546;animation-delay:1.68s"></b><b style="top:30%;left:12%;width:20px;height:20px;--o:0.459;animation-delay:0.24s"></b><b style="top:36%;left:91%;width:18px;height:18px;--o:0.401;animation-delay:1.82s"></b><b style="top:44%;left:18%;width:13px;height:13px;--o:0.323;animation-delay:0.36s"></b></div>
 
-<main>
-<div class="card hero">
+<div class="box">
+  <img class="logo" src="party-logo.png" alt="Party!">
   <div class="tick">✓</div>
   <h1>E-Mail bestätigt</h1>
   <p>Dein Konto ist bereit. Du kannst diese Seite jetzt schließen.</p>
 
-  <ol class="steps">
-    <li>Geh zurück in die <strong>Party!</strong>-App</li>
-    <li>Melde dich mit deiner E-Mail und deinem Passwort an</li>
-    <li>Erste Party planen 🎉</li>
-  </ol>
+  <div class="card">
+    <ol>
+      <li>Zurück in die <strong>Party!</strong>-App wechseln</li>
+      <li>Mit deiner E-Mail und deinem Passwort anmelden</li>
+      <li>Erste Party planen 🎉</li>
+    </ol>
+  </div>
 </div>
-</main>
 
-<footer>
-  Party! · <a href="datenschutz.html">Datenschutz</a>
-</footer>
+<footer>Party! · <a href="datenschutz.html">Datenschutz</a></footer>
 
 </body>
 </html>

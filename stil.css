@@ -23,12 +23,11 @@ header {
 }
 
 header .logo {
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  text-shadow: 0 0 18px rgba(255, 205, 30, 0.75);
-  color: #ffd94a;
-  margin: 0;
+  display: block;
+  width: 210px;
+  max-width: 62%;
+  height: auto;
+  margin: 0 auto;
 }
 
 header p { margin: 10px 0 0; opacity: 0.92; font-size: 15px; }

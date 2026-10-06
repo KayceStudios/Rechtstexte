@@ -46,7 +46,10 @@
     turnstile.render('#widget', {
       sitekey: key,
       theme: params.get('theme') || 'dark',
-      language: 'de',
+      // Sprache aus der App (?lang=de|en). Stand hier fest auf 'de' — ein
+      // niederlaendischer Tester bekam dadurch einen deutschen Satz zu lesen
+      // und wusste nicht, dass er darauf tippen soll (06.10.2026).
+      language: params.get('lang') || 'auto',
       callback: function (token) {
         send({ type: 'token', token: token });
       },

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>E-Mail bestätigt — Party!</title>
+<title>E-Mail-Bestätigung — Party!</title>
 <style>
   /* Derselbe Verlauf wie der Login-Bildschirm der App (AUTH_GRADIENT). */
   * { box-sizing: border-box; }
@@ -69,6 +69,14 @@
            font-size: 12.5px; color: rgba(255,255,255,0.7); }
   footer a { color: rgba(255,255,255,0.9); }
 
+  /* Fehler-Ansicht: standardmäßig versteckt, wird per Skript getauscht,
+     wenn Supabase einen Fehler im Anker zurückgibt (z. B. abgelaufener
+     Link). Ohne das stand hier auch dann „E-Mail bestätigt". */
+  .fail { display: none; }
+  body.has-error .ok { display: none; }
+  body.has-error .fail { display: block; }
+  body.has-error .tick { background: rgba(0,0,0,0.22); border-color: rgba(255,255,255,0.45); }
+
   @media (max-width: 380px) { h1 { font-size: 23px; } .logo { margin-bottom: 22px; } }
 </style>
 </head>
@@ -78,20 +86,62 @@
 
 <div class="box">
   <img class="logo" src="party-logo.png" alt="Party!">
-  <div class="tick">✓</div>
-  <h1>E-Mail bestätigt</h1>
-  <p>Dein Konto ist bereit. Du kannst diese Seite jetzt schließen.</p>
+  <div class="tick" id="mark">✓</div>
 
-  <div class="card">
-    <ol>
-      <li>Zurück in die <strong>Party!</strong>-App wechseln</li>
-      <li>Mit deiner E-Mail und deinem Passwort anmelden</li>
-      <li>Erste Party planen 🎉</li>
-    </ol>
+  <div class="ok">
+    <h1>E-Mail bestätigt</h1>
+    <p>Dein Konto ist bereit. Du kannst diese Seite jetzt schließen.</p>
+
+    <div class="card">
+      <ol>
+        <li>Zurück in die <strong>Party!</strong>-App wechseln</li>
+        <li>Mit deiner E-Mail und deinem Passwort anmelden</li>
+        <li>Erste Party planen 🎉</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="fail">
+    <h1 id="failTitle">Der Link ist abgelaufen</h1>
+    <p id="failText">Bestätigungs-Links gelten nur 24 Stunden. Einen neuen bekommst du in zwei Schritten.</p>
+
+    <div class="card">
+      <ol>
+        <li>Zurück in die <strong>Party!</strong>-App wechseln</li>
+        <li>Beim Anmelden auf <strong>Bestätigungsmail erneut senden</strong> tippen</li>
+        <li>Den neuen Link gleich öffnen — dann klappt es</li>
+      </ol>
+    </div>
   </div>
 </div>
 
 <footer>Party! · <a href="datenschutz.html">Datenschutz</a></footer>
+
+<script>
+  // Supabase hängt das Ergebnis an den Anker:
+  //   geklappt   →  #access_token=…
+  //   abgelaufen →  #error=access_denied&error_code=otp_expired&…
+  // Ohne diese Prüfung stand hier auch bei einem toten Link
+  // „E-Mail bestätigt" — und der Nutzer suchte den Fehler in der App.
+  (function () {
+    var hash = (location.hash || '').replace(/^#/, '');
+    var query = (location.search || '').replace(/^\?/, '');
+    var p = new URLSearchParams(hash || query);
+    var error = p.get('error') || p.get('error_code');
+    if (!error) return;
+
+    document.body.classList.add('has-error');
+    var code = p.get('error_code') || '';
+    var mark = document.getElementById('mark');
+    if (mark) mark.textContent = code === 'otp_expired' ? '⏳' : '!';
+
+    if (code !== 'otp_expired') {
+      document.getElementById('failTitle').textContent = 'Der Link funktioniert nicht';
+      document.getElementById('failText').textContent =
+        'Vielleicht wurde er schon benutzt oder beim Kopieren abgeschnitten. Einen neuen bekommst du in zwei Schritten.';
+    }
+  })();
+</script>
 
 </body>
 </html>

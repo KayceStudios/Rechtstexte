@@ -1,97 +1,526 @@
+/* ═══════════════════════════════════════════════════════════
+   Party! — Rechtstexte
+   Gestaltung im Look der App: Verlauf, Sternenhimmel, dunkles
+   Glas, goldene Akzente. Farben 1:1 aus src/constants/colors.ts.
+
+   ⚠️ Bewusst **keine** Web-Schriften von Google o. ä. Eine
+   eingebundene Schrift überträgt die IP-Adresse des Lesers an
+   einen fremden Server — auf einer Datenschutzerklärung wäre
+   das der falsche Ort. Es laufen nur Systemschriften.
+
+   ⚠️ Lesbarkeit geht vor Effekt: Der Kartengrund ist dunkler
+   als in der App (dort liegt er über einem ruhigeren Bild),
+   damit heller Text über dem bunten Verlauf sicher lesbar
+   bleibt.
+   ═══════════════════════════════════════════════════════════ */
+
 :root {
-  --ink: #2a1030;
-  --muted: #6b5570;
-  --gold: #b8860b;
-  --line: rgba(120, 60, 120, 0.16);
-  --card: #ffffff;
+  /* Palette der App */
+  --purple: #6e2ca8;
+  --mag: #9b1e8c;
+  --pink: #c51a6b;
+  --red: #de2f45;
+  --orange: #ec5a1c;
+  --amber: #f98d08;
+  --gold: #ffd700;
+  --gold-soft: #ffc85a;
+
+  --ink: #1a0a2e;
+  --text: #f6ecf6;
+  --muted: #cdb4d4;
+  --line: rgba(255, 190, 110, 0.18);
+
+  --card: rgba(30, 9, 40, 0.74);
+  --card-border: rgba(255, 180, 80, 0.26);
 }
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
+/* ⚠️ Der Verlauf liegt **am body und ist über die gesamte
+   Seitenhöhe gestreckt** (`background-size: 100% 100%`), nicht
+   als `position: fixed`-Ebene. Fixed bricht auf iOS Safari in
+   genau dem Moment, in dem man scrollt — und die längste Seite
+   hier (Datenschutz) wäre dann halb schwarz. */
 body {
   margin: 0;
-  background: #faf6fb;
-  color: var(--ink);
-  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  color: var(--text);
+  font: 16px/1.72 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--ink);
+  background-image: linear-gradient(
+    168deg,
+    #6e2ca8 0%,
+    #9b1e8c 22%,
+    #c51a6b 42%,
+    #de2f45 60%,
+    #ec5a1c 80%,
+    #f98d08 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
+/* ── Sternenhimmel ─────────────────────────────────────────
+   Nachgebaut aus <Atmosphere /> in der App: viele kleine
+   Lichtpunkte, die langsam heller und dunkler werden. Rein
+   über CSS — kein Skript, nichts, das geladen werden muss.
+
+   ⚠️ Als **gekacheltes Muster** (380 × 380), damit die Sterne
+   auf einer langen Seite gleichmäßig verteilt bleiben. Über
+   die ganze Höhe gestreckt säßen sie sonst meterweit
+   auseinander. */
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 14%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(1.3px 1.3px at 26% 38%, rgba(255, 245, 215, 0.75), transparent 60%),
+    radial-gradient(1.8px 1.8px at 41% 9%, rgba(255, 255, 255, 0.8), transparent 60%),
+    radial-gradient(1.2px 1.2px at 58% 27%, rgba(255, 235, 190, 0.7), transparent 60%),
+    radial-gradient(1.7px 1.7px at 73% 15%, rgba(255, 255, 255, 0.85), transparent 60%),
+    radial-gradient(1.3px 1.3px at 88% 33%, rgba(255, 245, 215, 0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 7% 55%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.2px 1.2px at 33% 68%, rgba(255, 240, 200, 0.55), transparent 60%),
+    radial-gradient(1.6px 1.6px at 64% 58%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.3px 1.3px at 92% 72%, rgba(255, 245, 215, 0.5), transparent 60%),
+    radial-gradient(1.4px 1.4px at 18% 88%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1.2px 1.2px at 78% 93%, rgba(255, 240, 200, 0.4), transparent 60%);
+  background-size: 380px 380px;
+  animation: funkeln 7s ease-in-out infinite;
+}
+
+/* Inhalt liegt über dem Sternenhimmel. */
+header, main, footer { position: relative; z-index: 1; }
+
+@keyframes funkeln {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+/* ── Kopf mit Logo ─────────────────────────────────────────── */
 header {
-  background: linear-gradient(160deg, #6e2ca8, #9b1e8c 35%, #c51a6b 60%, #ec5a1c 85%, #f98d08);
-  color: #fff;
-  padding: 54px 22px 46px;
   text-align: center;
+  padding: 64px 22px 54px;
 }
 
 header .logo {
   display: block;
-  width: 210px;
-  max-width: 62%;
+  width: 230px;
+  max-width: 64%;
   height: auto;
   margin: 0 auto;
+  /* Das Glühen des Logos aus der App (Logo.tsx). ⚠️ Dezent halten:
+     Ein starker Schein weicht die Kontur auf, und das Logo wirkt
+     dann verwaschen statt leuchtend. */
+  filter:
+    drop-shadow(0 1px 2px rgba(60, 10, 40, 0.5))
+    drop-shadow(0 0 22px rgba(255, 170, 50, 0.4));
+  animation: einblenden 0.8s ease-out both;
 }
 
-header p { margin: 10px 0 0; opacity: 0.92; font-size: 15px; }
+header p {
+  margin: 14px 0 0;
+  font-size: 15px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: rgba(255, 235, 205, 0.9);
+  animation: einblenden 0.8s ease-out 0.1s both;
+}
 
+/* ── Inhalt ────────────────────────────────────────────────── */
 main {
-  max-width: 720px;
-  margin: -26px auto 60px;
+  max-width: 760px;
+  margin: 0 auto 70px;
   padding: 0 18px;
 }
 
+/* ⚠️ **Bewusst ohne `backdrop-filter`.** Die Karte ist hier bis zu
+   7000 px hoch (Datenschutz). Einen Weichzeichner über eine so
+   große Fläche muss das Gerät bei jedem Scrollschritt neu rechnen —
+   auf einem älteren iPhone ist das genau die Sorte Effekt, die
+   eine Seite ruckeln lässt. Der Glas-Eindruck kommt stattdessen
+   aus einem leichten Verlauf und dem hellen Rand; der Unterschied
+   ist kaum zu sehen, und es rendert überall gleich. */
 .card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 28px 26px;
-  box-shadow: 0 8px 30px rgba(80, 20, 80, 0.07);
+  background:
+    linear-gradient(170deg, rgba(58, 16, 70, 0.9), rgba(26, 8, 36, 0.93));
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 34px 32px 30px;
+  box-shadow:
+    0 24px 60px rgba(20, 2, 20, 0.45),
+    inset 0 1px 0 rgba(255, 220, 160, 0.14);
+  animation: aufsteigen 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
-h1 { font-size: 25px; margin: 0 0 6px; letter-spacing: -0.3px; }
-h2 { font-size: 18px; margin: 34px 0 10px; letter-spacing: -0.2px; }
-h3 { font-size: 15px; margin: 22px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+/* ⚠️ **Die Startbilder dürfen den Inhalt nicht unsichtbar machen.**
+   Beide Abläufe liefen zuerst von `opacity: 0` los — zusammen mit
+   `both` heißt das: Solange die Animation nicht angelaufen ist,
+   ist die Seite **leer**. Beim Prüfen stand genau deshalb nichts
+   als der Verlauf da. Eine Rechtstexte-Seite, die unter
+   ungünstigen Umständen nichts anzeigt, ist nicht hinnehmbar —
+   es wird deshalb nur noch **verschoben**, nie ein- oder
+   ausgeblendet. Schlimmstenfalls sitzt etwas 18 px tiefer. */
+@keyframes einblenden {
+  from { transform: translateY(-10px); }
+  to { transform: none; }
+}
 
-.stand { color: var(--muted); font-size: 14px; margin: 0 0 6px; }
+@keyframes aufsteigen {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
 
-p, li { color: #3b2340; }
-ul { padding-left: 20px; }
-li { margin-bottom: 7px; }
+/* ── Überschriften ─────────────────────────────────────────── */
+h1 {
+  font-size: 34px;
+  line-height: 1.18;
+  margin: 0 0 8px;
+  letter-spacing: -0.6px;
+  background: linear-gradient(100deg, #ffe9a8, var(--gold) 45%, #ffa51f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
-a { color: #a01a6b; }
+h2 {
+  font-size: 19.5px;
+  margin: 36px 0 12px;
+  letter-spacing: -0.2px;
+  color: #fff6e4;
+  position: relative;
+  padding-left: 15px;
+}
 
-.fill {
-  background: #fff3c4;
-  border: 1px dashed #d9a300;
-  border-radius: 6px;
-  padding: 1px 7px;
+/* Goldener Akzent statt einer Reihe gleich aussehender Zeilen. */
+h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--orange));
+  box-shadow: 0 0 10px rgba(255, 190, 60, 0.5);
+}
+
+/* Auf der Übersicht sind die Überschriften selbst die Links. */
+h2 a { color: inherit; text-decoration: none; border: 0; }
+h2 a:hover { color: var(--gold); }
+
+h3 {
+  font-size: 13px;
+  margin: 26px 0 7px;
+  color: var(--gold-soft);
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.stand {
+  color: var(--muted);
+  font-size: 14.5px;
+  margin: 0 0 4px;
+}
+
+/* ── Fließtext ─────────────────────────────────────────────── */
+p, li { color: #eadff0; }
+
+ul { padding-left: 4px; list-style: none; }
+
+li {
+  margin-bottom: 9px;
+  padding-left: 22px;
+  position: relative;
+}
+
+li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(255, 200, 70, 0.6);
+}
+
+strong { color: #fff8ec; }
+
+a {
+  color: var(--gold-soft);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 200, 90, 0.4);
+  transition: color 0.18s, border-color 0.18s;
+}
+
+a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── Hervorgehobener Hinweis ───────────────────────────────── */
+.note {
+  background: linear-gradient(140deg, rgba(255, 190, 60, 0.12), rgba(236, 90, 28, 0.08));
+  border: 1px solid rgba(255, 190, 90, 0.3);
+  border-left: 3px solid var(--gold);
+  border-radius: 6px 16px 16px 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.note strong { color: var(--gold); }
+
+/* ── Tabellen (Datenschutz: Dienste, Fristen) ──────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 6px;
+  font-size: 15px;
+}
+
+th, td {
+  text-align: left;
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  color: var(--gold-soft);
   font-weight: 700;
-  color: #7a5600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+tr:last-child td { border-bottom: 0; }
+
+/* ── Platzhalter, die noch gefüllt werden müssen ───────────── */
+.fill {
+  background: rgba(255, 215, 0, 0.16);
+  border: 1px dashed var(--gold);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-weight: 700;
+  color: var(--gold);
   white-space: nowrap;
 }
 
-.note {
-  background: #fdf3fa;
-  border-left: 4px solid #c51a6b;
-  border-radius: 0 10px 10px 0;
-  padding: 14px 16px;
-  margin: 18px 0;
-  font-size: 14.5px;
-}
-
-table { width: 100%; border-collapse: collapse; margin: 12px 0 4px; font-size: 15px; }
-th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { color: var(--muted); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px; }
-
-nav.back { margin-top: 30px; font-size: 15px; }
+/* ── Fuß ───────────────────────────────────────────────────── */
+nav.back { margin-top: 32px; font-size: 15px; }
 
 footer {
   text-align: center;
-  color: var(--muted);
+  color: rgba(255, 235, 210, 0.75);
   font-size: 13.5px;
-  padding: 0 20px 50px;
+  padding: 0 20px 56px;
 }
 
-@media (max-width: 520px) {
-  header { padding: 42px 18px 40px; }
-  .card { padding: 22px 18px; }
-  table, th, td { font-size: 14px; }
+/* ═══ Übersicht (index.html) ═══════════════════════════════
+   Die drei Texte als antippbare Zeilen mit Pfeil, wie eine Liste
+   in der App.                                                 */
+
+.nav-list { display: grid; gap: 12px; margin: 26px 0 0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 200, 100, 0.24);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.075), rgba(255, 190, 90, 0.04));
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  color: inherit;
+}
+
+.nav-text { flex: 1; font-size: 14.5px; color: var(--muted); line-height: 1.55; }
+
+.nav-text strong {
+  display: block;
+  font-size: 17.5px;
+  color: #fff6e4;
+  margin-bottom: 3px;
+}
+
+.nav-arrow {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--gold);
+  flex: none;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-item:hover .nav-arrow { transform: translateX(3px); }
+
+.kontakt { margin-top: 26px; }
+
+/* ═══ Impressum ════════════════════════════════════════════
+   Eigene Klassen mit Präfix `imp-`. Die Pflichtangaben stehen
+   zuerst und hervorgehoben — danach sucht man, wenn man ein
+   Impressum aufruft. Der Rest ist Kleingedrucktes.           */
+
+.imp-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 26px 0 26px;
+}
+
+.imp-fact {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 190, 90, 0.05));
+  border: 1px solid rgba(255, 200, 100, 0.26);
+  border-radius: 18px;
+  padding: 20px 22px;
+  overflow: hidden;
+}
+
+/* Zarter goldener Schimmer über der oberen Kante. */
+.imp-fact::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 120, 0.6), transparent);
+}
+
+.imp-fact .label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 11px;
+}
+
+.imp-fact p { margin: 0; line-height: 1.62; }
+.imp-fact .sub { color: var(--muted); font-size: 13.5px; margin-top: 9px; }
+.imp-fact a { word-break: break-word; }
+
+/* Zwei kurze Rechtsangaben nebeneinander statt zweier Absätze. */
+.imp-short {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+.imp-short p { margin: 0; font-size: 14.5px; color: #e2d6e8; }
+
+.imp-short strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--gold-soft);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+}
+
+.imp-rule {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent);
+  margin: 30px 0 0;
+}
+
+/* Weiterführende Texte als Knöpfe im Stil der App. */
+.imp-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+
+.imp-links a {
+  flex: 1 1 200px;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 200, 100, 0.3);
+  background: linear-gradient(135deg, rgba(255, 107, 0, 0.18), rgba(255, 45, 120, 0.16));
+  color: #ffeccd;
+  font-weight: 700;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s;
+}
+
+.imp-links a:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.imp-updated { color: var(--muted); font-size: 13px; margin-top: 26px; }
+
+/* ── Kleine Bildschirme ────────────────────────────────────── */
+@media (max-width: 620px) {
+  header { padding: 46px 18px 40px; }
+  .card { padding: 26px 20px 24px; border-radius: 20px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 18px; }
+  .imp-facts, .imp-short { grid-template-columns: 1fr; }
+
+  /* ⚠️ **Tabelle wird zur Liste.** Die Übersicht der Dienste in der
+     Datenschutzerklärung hat drei Spalten mit viel Text — auf einem
+     iPhone lief die dritte rechts aus dem Bild und war schlicht nicht
+     lesbar. Jede Zeile wird deshalb eine eigene Karte, und die
+     Spaltenüberschrift steht über dem Wert (`data-label` an jeder
+     Zelle). ⚠️ Bei einer neuen Tabelle die `data-label` nicht
+     vergessen, sonst stehen auf dem Handy nur Werte ohne Bezug. */
+  table { display: block; }
+  thead, tr:first-child { display: none; }
+
+  table tr {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  table td {
+    display: block;
+    border: 0;
+    padding: 0 0 10px;
+    font-size: 14.5px;
+  }
+
+  table td:last-child { padding-bottom: 0; }
+
+  table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 3px;
+  }
+
+  /* Die erste Zelle ist der Name des Dienstes — der braucht keine
+     Beschriftung, er ist die Überschrift der Karte. */
+  table td:first-child::before { display: none; }
+  table td:first-child { font-size: 17px; margin-bottom: 4px; }
+  table td:first-child strong { color: #fff6e4; }
+}
+
+/* Wer Bewegung im System abgestellt hat, bekommt keine. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto;
+  }
 }
